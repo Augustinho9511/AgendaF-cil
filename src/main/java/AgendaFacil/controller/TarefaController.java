@@ -1,5 +1,6 @@
 package AgendaFacil.controller;
 
+import AgendaFacil.dto.RecurringTarefaDTO;
 import AgendaFacil.service.TarefaService;
 import AgendaFacil.tarefa.Tarefa;
 import org.apache.catalina.connector.Response;
@@ -23,6 +24,12 @@ public class TarefaController {
     public ResponseEntity<List<Tarefa>> getAllTarefa() {
         List<Tarefa> tarefas = tarefaService.getAllTarefa();
         return new ResponseEntity<>(tarefas, HttpStatus.OK);
+    }
+
+    @PostMapping("/CreateRecurring")
+    public ResponseEntity<List<Tarefa>> createRecurringAposta(@RequestBody RecurringTarefaDTO dto) {
+        List<Tarefa> tarefasCriadas = tarefaService.createRecurringTarefas(dto);
+        return new ResponseEntity<>(tarefasCriadas, HttpStatus.CREATED);
     }
 
     @PostMapping("/Create")
