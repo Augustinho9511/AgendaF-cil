@@ -1,13 +1,13 @@
 package AgendaFacil.tarefa;
 
+import AgendaFacil.usuario.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 @Setter
 @Getter
@@ -26,12 +26,17 @@ public class Tarefa {
     private String status;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @Column(name = "horario_inicio") // É uma boa prática usar snake_case em nomes de colunas
+    @Column(name = "horario_inicio")
     private LocalDateTime horarioInicio;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "horario_fim")
     private LocalDateTime horarioFim;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnore
+    private Usuario usuario;
 
     public Tarefa() {
     }
