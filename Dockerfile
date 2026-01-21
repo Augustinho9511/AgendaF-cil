@@ -1,13 +1,15 @@
-# Estágio de Build (Construção)
-FROM gradle:7.6.0-jdk17 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-# Constrói o projeto pulando os testes para ser mais rápido
-RUN gradle build --no-daemon -x test
+# Estágio de Build
+FROM eclipse-temurin:17-jdk-alpine AS build
+WORKDIR /app
+# Copia todos os arquivos para o container
+COPY . .
+# Usa o wrapper do gradle (gradlew) que já está na sua pasta
+RUN ./gradlew build -x test --no-daemon
 
 # Estágio de Execução
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+# Remove o jar 'plain' antes de copiar para evitar conflitos
+COPY --from=build /app/build/libs/*[!plain].jar app.jar
 EXPOSE 8080
-# Copia o arquivo .jar gerado (o Gradle coloca dentro de build/libs)
-COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
