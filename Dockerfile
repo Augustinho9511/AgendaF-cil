@@ -10,6 +10,6 @@ RUN ./gradlew build -x test --no-daemon
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 # Remove o jar 'plain' antes de copiar para evitar conflitos
-COPY --from=build /app/build/libs/*[!plain].jar app.jar
+COPY --from=build /home/gradle/src/build/libs/*[!plain].jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
